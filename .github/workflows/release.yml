@@ -1,0 +1,34 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - run: npm test
+
+      - uses: chickensoft-games/setup-godot@v2
+        with:
+          version: "4.5.2"
+          use-dotnet: false
+
+      - run: godot --headless --path . --import --quit
+
+      - name: Package addon
+        run: zip -r auralog-godot.zip addons/auralog
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: auralog-godot.zip

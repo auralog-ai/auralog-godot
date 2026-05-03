@@ -1,0 +1,12 @@
+; Engine configuration file.
+; This project exists so CI and maintainers can validate the addon headlessly.
+
+config_version=5
+
+[application]
+
+config/name="Auralog Godot SDK"
+
+[debug]
+
+settings/gdscript/always_track_call_stacks=true

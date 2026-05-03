@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - run: npm test
+
+  godot:
+    name: Godot ${{ matrix.godot }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        godot: ["4.5.2", "4.6.2"]
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: chickensoft-games/setup-godot@v2
+        with:
+          version: ${{ matrix.godot }}
+          use-dotnet: false
+
+      - run: godot --version
+
+      - run: godot --headless --path . --import --quit
+
+      - name: Install GUT
+        run: |
+          if [ "${{ matrix.godot }}" = "4.5.2" ]; then
+            GUT_VERSION="v9.5.0"
+          else
+            GUT_VERSION="v9.6.0"
+          fi
+          curl -L --fail -o /tmp/gut.zip "https://github.com/bitwes/Gut/archive/refs/tags/${GUT_VERSION}.zip"
+          unzip -q /tmp/gut.zip -d /tmp
+          mkdir -p addons/gut
+          cp -R "/tmp/Gut-${GUT_VERSION#v}/addons/gut/." addons/gut/
+
+      - run: godot --headless -s addons/gut/gut_cmdln.gd -d --path "$PWD" -gdir=res://test/unit -ginclude_subdirs -gexit
