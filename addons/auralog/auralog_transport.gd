@@ -31,6 +31,9 @@ func configure(config: AuralogConfig) -> void:
 	if _http == null:
 		_http = HTTPRequest.new()
 		_http.name = "AuralogHTTPRequest"
+		# Disable redirect following: the API key is in the POST body, and Godot
+		# replays the body on 307/308. A hijacked redirect would exfiltrate keys.
+		_http.set_max_redirects(0)
 		add_child(_http)
 		_http.request_completed.connect(_on_request_completed)
 	if _retry_timer == null:

@@ -51,7 +51,8 @@ With `capture_console` and `capture_errors` enabled, Auralog registers a Godot `
 |---|---|---|---|
 | `api_key` | `String` | _required_ | Your Auralog project API key |
 | `environment` | `String` | `"production"` | e.g. `"production"`, `"staging"`, `"dev"` |
-| `endpoint` | `String` | `https://ingest.auralog.ai` | Ingest endpoint override |
+| `endpoint` | `String` | `https://ingest.auralog.ai` | Ingest endpoint override. Must use `https://` unless `allow_insecure_endpoint` is `true`. |
+| `allow_insecure_endpoint` | `bool` | `false` | Allow `http://` endpoints. Off by default so a misconfigured `endpoint` cannot silently downgrade every POST to plaintext. |
 | `flush_interval` | `float` | `5.0` | Seconds between batched flushes |
 | `max_batch_size` | `int` | `50` | Maximum logs per request |
 | `max_queue_size` | `int` | `1000` | Maximum pending logs retained in memory |
