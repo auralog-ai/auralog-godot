@@ -23,6 +23,7 @@ var retry_initial_delay := DEFAULT_RETRY_INITIAL_DELAY
 var retry_max_delay := DEFAULT_RETRY_MAX_DELAY
 var global_metadata = {}
 var trace_id := ""
+var allow_insecure_endpoint := false
 
 static func from_dictionary(values: Dictionary) -> AuralogConfig:
 	var config := AuralogConfig.new()
@@ -40,7 +41,19 @@ static func from_dictionary(values: Dictionary) -> AuralogConfig:
 	config.retry_max_delay = float(values.get("retry_max_delay", ProjectSettings.get_setting("auralog/retry_max_delay", config.retry_max_delay)))
 	config.global_metadata = values.get("global_metadata", config.global_metadata)
 	config.trace_id = str(values.get("trace_id", config.trace_id))
+	config.allow_insecure_endpoint = bool(values.get("allow_insecure_endpoint", ProjectSettings.get_setting("auralog/allow_insecure_endpoint", config.allow_insecure_endpoint)))
 	return config
 
 func is_valid() -> bool:
-	return not api_key.is_empty() and not environment.is_empty() and not endpoint.is_empty()
+	return validation_error().is_empty()
+
+func validation_error() -> String:
+	if api_key.is_empty():
+		return "api_key is required"
+	if environment.is_empty():
+		return "environment is required"
+	if endpoint.is_empty():
+		return "endpoint is required"
+	if not allow_insecure_endpoint and not endpoint.begins_with("https://"):
+		return "endpoint must use https:// (set allow_insecure_endpoint=true to override)"
+	return ""

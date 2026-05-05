@@ -29,7 +29,10 @@ func init(options: Dictionary) -> void:
 	_config = AuralogConfig.from_dictionary(options)
 	if not _config.trace_id.is_empty():
 		_trace_id = _config.trace_id
-	if not _config.is_valid():
+	var validation_error := _config.validation_error()
+	if not validation_error.is_empty():
+		if not _config.api_key.is_empty():
+			push_warning("auralog: %s" % validation_error)
 		return
 
 	_transport.configure(_config)
