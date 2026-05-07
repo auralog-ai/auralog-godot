@@ -2,7 +2,7 @@
 
 Godot 4.5+ SDK for [Auralog](https://auralog.ai) — agentic logging and application awareness.
 
-Auralog uses Claude as an on-call engineer: it monitors your logs and errors, alerts you when something's wrong, and opens fix PRs automatically.
+Auralog acts as an on-call engineer — powered by your choice of model (Claude, OpenAI, or any MCP-compatible LLM) — monitoring your logs and errors, alerting you when something's wrong, and opening fix PRs automatically.
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
