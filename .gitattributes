@@ -1,0 +1,8 @@
+# Scope the GitHub-generated source ZIP (and Godot Asset Library download) to the
+# addon itself plus the icon and license, so consumers don't get the test
+# harness, examples, package.json, or maintainer scripts.
+/**                  export-ignore
+/addons              !export-ignore
+/addons/**           !export-ignore
+/icon.png            !export-ignore
+/LICENSE             !export-ignore
