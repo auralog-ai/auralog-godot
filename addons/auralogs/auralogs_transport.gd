@@ -1,15 +1,15 @@
-class_name AuralogTransport
+class_name AuralogsTransport
 extends Node
 
 signal flushed(success: bool, entries: Array[Dictionary])
 
 var api_key := ""
-var endpoint := AuralogConfig.DEFAULT_ENDPOINT
-var max_batch_size := AuralogConfig.DEFAULT_MAX_BATCH_SIZE
-var max_queue_size := AuralogConfig.DEFAULT_MAX_QUEUE_SIZE
-var max_retry_attempts := AuralogConfig.DEFAULT_MAX_RETRY_ATTEMPTS
-var retry_initial_delay := AuralogConfig.DEFAULT_RETRY_INITIAL_DELAY
-var retry_max_delay := AuralogConfig.DEFAULT_RETRY_MAX_DELAY
+var endpoint := AuralogsConfig.DEFAULT_ENDPOINT
+var max_batch_size := AuralogsConfig.DEFAULT_MAX_BATCH_SIZE
+var max_queue_size := AuralogsConfig.DEFAULT_MAX_QUEUE_SIZE
+var max_retry_attempts := AuralogsConfig.DEFAULT_MAX_RETRY_ATTEMPTS
+var retry_initial_delay := AuralogsConfig.DEFAULT_RETRY_INITIAL_DELAY
+var retry_max_delay := AuralogsConfig.DEFAULT_RETRY_MAX_DELAY
 var _batch_queue: Array[Dictionary] = []
 var _single_queue: Array[Dictionary] = []
 var _http: HTTPRequest
@@ -20,7 +20,7 @@ var _active_entries: Array[Dictionary] = []
 var _active_single := false
 var _consecutive_failures := 0
 
-func configure(config: AuralogConfig) -> void:
+func configure(config: AuralogsConfig) -> void:
 	api_key = config.api_key
 	endpoint = config.endpoint.trim_suffix("/")
 	max_batch_size = config.max_batch_size
@@ -30,7 +30,7 @@ func configure(config: AuralogConfig) -> void:
 	retry_max_delay = config.retry_max_delay
 	if _http == null:
 		_http = HTTPRequest.new()
-		_http.name = "AuralogHTTPRequest"
+		_http.name = "AuralogsHTTPRequest"
 		# Disable redirect following: the API key is in the POST body, and Godot
 		# replays the body on 307/308. A hijacked redirect would exfiltrate keys.
 		_http.set_max_redirects(0)
@@ -38,7 +38,7 @@ func configure(config: AuralogConfig) -> void:
 		_http.request_completed.connect(_on_request_completed)
 	if _retry_timer == null:
 		_retry_timer = Timer.new()
-		_retry_timer.name = "AuralogRetryTimer"
+		_retry_timer.name = "AuralogsRetryTimer"
 		_retry_timer.one_shot = true
 		_retry_timer.timeout.connect(flush)
 		add_child(_retry_timer)
@@ -123,8 +123,8 @@ func _trim_for_capacity() -> void:
 func _requeue_or_drop(entries: Array[Dictionary], single: bool) -> void:
 	var retryable := []
 	for entry in entries:
-		var attempts := int(entry.get("_auralog_attempts", 0)) + 1
-		entry["_auralog_attempts"] = attempts
+		var attempts := int(entry.get("_auralogs_attempts", 0)) + 1
+		entry["_auralogs_attempts"] = attempts
 		if attempts < max_retry_attempts:
 			retryable.append(entry)
 	if retryable.is_empty():
@@ -146,7 +146,7 @@ func _wire_entries(entries: Array[Dictionary]) -> Array:
 	for entry in entries:
 		var wire_entry := {}
 		for key in entry.keys():
-			if not str(key).begins_with("_auralog_"):
+			if not str(key).begins_with("_auralogs_"):
 				wire_entry[key] = entry[key]
 		out.append(wire_entry)
 	return out

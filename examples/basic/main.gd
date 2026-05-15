@@ -1,7 +1,7 @@
 extends Node
 
 func _ready() -> void:
-	Auralog.init({
+	Auralogs.init({
 		"api_key": "aura_your_key",
 		"environment": "production",
 		"capture_console": true,
@@ -13,6 +13,6 @@ func _ready() -> void:
 			}
 	})
 
-	Auralog.info("level started", {"level": 1})
+	Auralogs.info("level started", {"level": 1})
 	print("this print is captured by the Godot Logger hook")
 	push_warning("this warning is captured through Logger._log_error")

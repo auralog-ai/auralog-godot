@@ -1,11 +1,11 @@
-# Auralog Godot Addon
+# Auralogs Godot Addon
 
-Godot 4.5+ addon for Auralog automatic log/error capture.
+Godot 4.5+ addon for Auralogs automatic log/error capture.
 
-Add `res://addons/auralog/auralog.gd` as an Autoload named `Auralog`, then call:
+Add `res://addons/auralogs/auralogs.gd` as an Autoload named `Auralogs`, then call:
 
 ```gdscript
-Auralog.init({
+Auralogs.init({
 	"api_key": "aura_your_key",
 	"environment": "production",
 	"capture_console": true,

@@ -1,7 +1,7 @@
 extends GutTest
 
 func test_sanitizes_common_godot_values() -> void:
-	var sanitized: Dictionary = AuralogSerializer.sanitize_dictionary({
+	var sanitized: Dictionary = AuralogsSerializer.sanitize_dictionary({
 		"position": Vector2(3.0, 4.0),
 		"color": Color.RED,
 		"path": ^"Player/Camera"
@@ -12,7 +12,7 @@ func test_sanitizes_common_godot_values() -> void:
 	assert_eq(sanitized["path"], "Player/Camera")
 
 func test_sanitizes_packed_byte_array_without_comma_joining() -> void:
-	var sanitized: Dictionary = AuralogSerializer.sanitize(PackedByteArray([1, 2, 3]))
+	var sanitized: Dictionary = AuralogsSerializer.sanitize(PackedByteArray([1, 2, 3]))
 
 	assert_eq(sanitized["type"], "PackedByteArray")
 	assert_eq(sanitized["size"], 3)
@@ -22,6 +22,6 @@ func test_limits_recursive_dictionaries() -> void:
 	var data: Dictionary = {}
 	data["self"] = data
 
-	var sanitized: Dictionary = AuralogSerializer.sanitize_dictionary(data)
+	var sanitized: Dictionary = AuralogsSerializer.sanitize_dictionary(data)
 
 	assert_eq(sanitized["self"], {"$circular": true})

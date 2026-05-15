@@ -1,14 +1,14 @@
-class_name AuralogClient
+class_name AuralogsClient
 extends Node
 
-const SDK_NAME := "auralog-godot"
+const SDK_NAME := "auralogs-godot"
 const SDK_VERSION := "0.1.0"
 const CRASH_MARKER := "Program crashed with signal"
 
-var _config := AuralogConfig.new()
-var _transport := AuralogTransport.new()
+var _config := AuralogsConfig.new()
+var _transport := AuralogsTransport.new()
 var _timer := Timer.new()
-var _godot_logger: AuralogGodotLogger
+var _godot_logger: AuralogsGodotLogger
 var _initialized := false
 var _trace_id := ""
 var _last_reported_crash_hash := ""
@@ -17,22 +17,22 @@ var _draining_captured_logs := false
 
 func _init() -> void:
 	_trace_id = _generate_trace_id()
-	_transport.name = "AuralogTransport"
+	_transport.name = "AuralogsTransport"
 	add_child(_transport)
 	_transport.flushed.connect(_on_transport_flushed)
-	_timer.name = "AuralogFlushTimer"
+	_timer.name = "AuralogsFlushTimer"
 	_timer.one_shot = false
 	_timer.timeout.connect(flush)
 	add_child(_timer)
 
 func init(options: Dictionary) -> void:
-	_config = AuralogConfig.from_dictionary(options)
+	_config = AuralogsConfig.from_dictionary(options)
 	if not _config.trace_id.is_empty():
 		_trace_id = _config.trace_id
 	var validation_error := _config.validation_error()
 	if not validation_error.is_empty():
 		if not _config.api_key.is_empty():
-			push_warning("auralog: %s" % validation_error)
+			push_warning("auralogs: %s" % validation_error)
 		return
 
 	_transport.configure(_config)
@@ -93,7 +93,7 @@ func _notification(what: int) -> void:
 func _install_logger() -> void:
 	if _godot_logger != null:
 		return
-	_godot_logger = AuralogGodotLogger.new()
+	_godot_logger = AuralogsGodotLogger.new()
 	OS.add_logger(_godot_logger)
 
 func _drain_captured_logs() -> void:
@@ -129,7 +129,7 @@ func _emit_log(level: String, message: String, metadata := {}, stack_trace := ""
 	elif metadata != null:
 		_warn_non_dictionary_metadata_once()
 		effective_metadata = {}
-	var sanitized_metadata: Dictionary = AuralogSerializer.sanitize_dictionary(_merge_metadata(effective_metadata))
+	var sanitized_metadata: Dictionary = AuralogsSerializer.sanitize_dictionary(_merge_metadata(effective_metadata))
 	var entry := {
 		"level": level,
 		"message": message,
@@ -142,7 +142,7 @@ func _emit_log(level: String, message: String, metadata := {}, stack_trace := ""
 		entry["stackTrace"] = stack_trace
 	if internal is Dictionary:
 		for key in internal.keys():
-			entry["_auralog_" + str(key)] = internal[key]
+			entry["_auralogs_" + str(key)] = internal[key]
 	var immediate := level == "error" or level == "fatal"
 	_set_logger_suppressed(true)
 	_transport.send(entry, immediate)
@@ -179,7 +179,7 @@ func _base_metadata() -> Dictionary:
 		if viewport != null:
 			viewport_size = viewport.get_visible_rect().size
 	return {
-		"auralog": {"sdk_name": SDK_NAME, "sdk_version": SDK_VERSION},
+		"auralogs": {"sdk_name": SDK_NAME, "sdk_version": SDK_VERSION},
 		"godot": {
 			"version": Engine.get_version_info(),
 			"debug_build": OS.is_debug_build(),
@@ -202,7 +202,7 @@ func _report_previous_crash() -> void:
 	if files.is_empty():
 		return
 	files.sort_custom(func(left, right): return int(left["modified"]) > int(right["modified"]))
-	var state_path := "user://auralog_last_crash.txt"
+	var state_path := "user://auralogs_last_crash.txt"
 	if FileAccess.file_exists(state_path):
 		_last_reported_crash_hash = FileAccess.get_file_as_string(state_path)
 	for file in files:
@@ -247,17 +247,17 @@ func _on_transport_flushed(success: bool, entries: Array[Dictionary]) -> void:
 	if not success:
 		return
 	for entry in entries:
-		if entry.has("_auralog_crash_hash"):
-			var state := FileAccess.open("user://auralog_last_crash.txt", FileAccess.WRITE)
+		if entry.has("_auralogs_crash_hash"):
+			var state := FileAccess.open("user://auralogs_last_crash.txt", FileAccess.WRITE)
 			if state != null:
-				state.store_string(str(entry["_auralog_crash_hash"]))
+				state.store_string(str(entry["_auralogs_crash_hash"]))
 
 func _warn_non_dictionary_metadata_once() -> void:
 	if _warned_non_dictionary_metadata:
 		return
 	_warned_non_dictionary_metadata = true
 	_set_logger_suppressed(true)
-	push_warning("auralog: metadata must be a Dictionary; non-Dictionary metadata was dropped")
+	push_warning("auralogs: metadata must be a Dictionary; non-Dictionary metadata was dropped")
 	_set_logger_suppressed(false)
 
 func _set_logger_suppressed(value: bool) -> void:

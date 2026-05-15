@@ -1,26 +1,26 @@
-# auralog-godot (Beta)
+# auralogs-godot (Beta)
 
-Godot 4.5+ SDK for [Auralog](https://auralog.ai) — agentic logging and application awareness.
+Godot 4.5+ SDK for [Auralogs](https://auralogs.ai) — agentic logging and application awareness.
 
-Auralog acts as an on-call engineer — powered by your choice of model (Claude, OpenAI, or any MCP-compatible LLM) — monitoring your logs and errors, alerting you when something's wrong, and opening fix PRs automatically.
+Auralogs acts as an on-call engineer — powered by your choice of model (Claude, OpenAI, or any MCP-compatible LLM) — monitoring your logs and errors, alerting you when something's wrong, and opening fix PRs automatically.
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 ## Install
 
-Copy `addons/auralog` into your Godot project, enable the Auralog plugin, then click **Auralog: Install Autoload** in the editor toolbar.
+Copy `addons/auralogs` into your Godot project, enable the Auralogs plugin, then click **Auralogs: Install Autoload** in the editor toolbar.
 
 You can also add the Autoload manually:
 
 | Name | Path |
 |---|---|
-| `Auralog` | `res://addons/auralog/auralog.gd` |
+| `Auralogs` | `res://addons/auralogs/auralogs.gd` |
 
 ## Quick start
 
 ```gdscript
 func _ready() -> void:
-	Auralog.init({
+	Auralogs.init({
 		"api_key": "aura_your_key",
 		"environment": "production",
 		"capture_console": true,
@@ -33,11 +33,11 @@ func _ready() -> void:
 			}
 	})
 
-	Auralog.info("level started", {"level": 3})
-	Auralog.error("save failed", {"slot": 1})
+	Auralogs.info("level started", {"level": 3})
+	Auralogs.error("save failed", {"slot": 1})
 ```
 
-With `capture_console` and `capture_errors` enabled, Auralog registers a Godot `Logger` via `OS.add_logger()` and captures normal prints, stderr messages, warnings, script errors, shader errors, and engine errors as much as Godot exposes them.
+With `capture_console` and `capture_errors` enabled, Auralogs registers a Godot `Logger` via `OS.add_logger()` and captures normal prints, stderr messages, warnings, script errors, shader errors, and engine errors as much as Godot exposes them.
 
 ## Requirements
 
@@ -49,9 +49,9 @@ With `capture_console` and `capture_errors` enabled, Auralog registers a Godot `
 
 | Option | Type | Default | Description |
 |---|---|---|---|
-| `api_key` | `String` | _required_ | Your Auralog project API key |
+| `api_key` | `String` | _required_ | Your Auralogs project API key |
 | `environment` | `String` | `"production"` | e.g. `"production"`, `"staging"`, `"dev"` |
-| `endpoint` | `String` | `https://ingest.auralog.ai` | Ingest endpoint override. Must use `https://` unless `allow_insecure_endpoint` is `true`. |
+| `endpoint` | `String` | `https://ingest.auralogs.ai` | Ingest endpoint override. Must use `https://` unless `allow_insecure_endpoint` is `true`. |
 | `allow_insecure_endpoint` | `bool` | `false` | Allow `http://` endpoints. Off by default so a misconfigured `endpoint` cannot silently downgrade every POST to plaintext. |
 | `flush_interval` | `float` | `5.0` | Seconds between batched flushes |
 | `max_batch_size` | `int` | `50` | Maximum logs per request |
@@ -74,9 +74,9 @@ With `capture_console` and `capture_errors` enabled, Auralog registers a Godot `
 Godot 4.5 introduced custom loggers. This SDK uses that hook, but a few engine constraints matter:
 
 - The logger is installed when the Autoload initializes, so very early engine startup messages are not available.
-- Logger callbacks can run on non-main threads. Auralog only buffers records inside those callbacks and sends HTTP later from the Autoload node.
+- Logger callbacks can run on non-main threads. Auralogs only buffers records inside those callbacks and sends HTTP later from the Autoload node.
 - Calling `print()`, `push_error()`, or `push_warning()` inside a logger callback is not supported by Godot and can trigger recursion protection.
-- Hard crashes cannot be reported during the crashing session because scripting has stopped. Auralog reads rotated Godot log files on the next launch and reports crash blocks once.
+- Hard crashes cannot be reported during the crashing session because scripting has stopped. Auralogs reads rotated Godot log files on the next launch and reports crash blocks once.
 
 ## Metadata
 
@@ -115,7 +115,7 @@ godot --headless -s addons/gut/gut_cmdln.gd -d --path "$PWD" -gdir=res://test/un
 
 ## Documentation
 
-Full docs at [docs.auralog.ai](https://docs.auralog.ai).
+Full docs at [docs.auralogs.ai](https://docs.auralogs.ai).
 
 ## Security
 

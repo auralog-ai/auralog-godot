@@ -1,4 +1,4 @@
-class_name AuralogSerializer
+class_name AuralogsSerializer
 extends RefCounted
 
 const MAX_DEPTH := 8

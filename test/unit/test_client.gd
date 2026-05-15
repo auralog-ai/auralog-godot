@@ -1,7 +1,7 @@
 extends GutTest
 
 func test_trace_id_is_uuid_v4_shape() -> void:
-	var client = load("res://addons/auralog/auralog.gd").new()
+	var client = load("res://addons/auralogs/auralogs.gd").new()
 	add_child_autofree(client)
 	var trace_id: String = client.get_trace_id()
 
@@ -10,7 +10,7 @@ func test_trace_id_is_uuid_v4_shape() -> void:
 	assert_true(["8", "9", "a", "b"].has(trace_id.substr(19, 1)))
 
 func test_transport_queues_error_separately_from_batch_logs() -> void:
-	var transport := AuralogTransport.new()
+	var transport := AuralogsTransport.new()
 	add_child_autofree(transport)
 
 	transport.send({"level": "info", "message": "one"})

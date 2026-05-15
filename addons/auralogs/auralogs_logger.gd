@@ -1,4 +1,4 @@
-class_name AuralogGodotLogger
+class_name AuralogsGodotLogger
 extends Logger
 
 var _buffer: Array[Dictionary] = []

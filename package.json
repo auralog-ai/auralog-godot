@@ -1,8 +1,8 @@
 {
-  "name": "auralog-godot",
+  "name": "auralogs-godot",
   "version": "0.1.0",
   "private": true,
-  "description": "Auralog SDK for Godot 4.5+.",
+  "description": "Auralogs SDK for Godot 4.5+.",
   "type": "module",
   "scripts": {
     "test": "node scripts/static-checks.mjs"
