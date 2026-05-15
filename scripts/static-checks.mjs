@@ -4,13 +4,13 @@ import { join } from "node:path";
 const root = new URL("..", import.meta.url).pathname;
 
 const requiredFiles = [
-  "addons/auralog/plugin.cfg",
-  "addons/auralog/auralog.gd",
-  "addons/auralog/auralog_config.gd",
-  "addons/auralog/auralog_logger.gd",
-  "addons/auralog/auralog_transport.gd",
-  "addons/auralog/auralog_serializer.gd",
-  "addons/auralog/editor/auralog_plugin.gd",
+  "addons/auralogs/plugin.cfg",
+  "addons/auralogs/auralogs.gd",
+  "addons/auralogs/auralogs_config.gd",
+  "addons/auralogs/auralogs_logger.gd",
+  "addons/auralogs/auralogs_transport.gd",
+  "addons/auralogs/auralogs_serializer.gd",
+  "addons/auralogs/editor/auralogs_plugin.gd",
   "README.md",
   "CHANGELOG.md",
   "LICENSE",
@@ -21,7 +21,7 @@ const requiredFiles = [
 ];
 
 const requiredPatterns = new Map([
-	  ["addons/auralog/auralog.gd", [
+	  ["addons/auralogs/auralogs.gd", [
 	    /func init\(options: Dictionary\)/,
 	    /func info\(message: String/,
 	    /func error\(message: String/,
@@ -32,14 +32,14 @@ const requiredPatterns = new Map([
 	    /Time\.get_datetime_string_from_system\(true\)/,
 	    /get_unix_time_from_system\(\) \* 1000\.0/,
 	  ]],
-  ["addons/auralog/auralog_logger.gd", [
+  ["addons/auralogs/auralogs_logger.gd", [
     /extends Logger/,
     /func _log_message\(message: String, error: bool\)/,
     /func _log_error\(/,
     /Mutex\.new\(\)/,
     /get_frame_file/,
   ]],
-	  ["addons/auralog/auralog_transport.gd", [
+	  ["addons/auralogs/auralogs_transport.gd", [
 	    /HTTPRequest\.new\(\)/,
 	    /\/v1\/logs\/single/,
 	    /\/v1\/logs/,
@@ -47,7 +47,7 @@ const requiredPatterns = new Map([
 	    /_schedule_retry/,
 	    /max_retry_attempts/,
 	  ]],
-  ["addons/auralog/auralog_serializer.gd", [
+  ["addons/auralogs/auralogs_serializer.gd", [
     /TYPE_VECTOR2/,
     /TYPE_COLOR/,
     /TYPE_OBJECT/,
@@ -88,8 +88,8 @@ for (const file of allFiles) {
 }
 
 const packageJson = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
-const pluginCfg = readFileSync(join(root, "addons/auralog/plugin.cfg"), "utf8");
-const client = readFileSync(join(root, "addons/auralog/auralog.gd"), "utf8");
+const pluginCfg = readFileSync(join(root, "addons/auralogs/plugin.cfg"), "utf8");
+const client = readFileSync(join(root, "addons/auralogs/auralogs.gd"), "utf8");
 const pluginVersion = pluginCfg.match(/^version="([^"]+)"/m)?.[1];
 const sdkVersion = client.match(/^const SDK_VERSION := "([^"]+)"/m)?.[1];
 assert(pluginVersion === packageJson.version, "plugin.cfg version must match package.json");
