@@ -1,6 +1,6 @@
 {
   "name": "auralogs-godot",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Auralogs SDK for Godot 4.5+.",
   "type": "module",
