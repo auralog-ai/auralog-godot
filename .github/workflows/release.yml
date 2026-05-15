@@ -29,6 +29,6 @@ jobs:
       - name: Package addon
         run: zip -r auralogs-godot.zip addons/auralogs
 
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           files: auralogs-godot.zip
