@@ -74,7 +74,7 @@ for (const [file, patterns] of requiredPatterns) {
   }
 }
 
-const gdFiles = collectFiles(join(root, "addons/auralog")).filter((file) => file.endsWith(".gd"));
+const gdFiles = collectFiles(join(root, "addons/auralogs")).filter((file) => file.endsWith(".gd"));
 for (const file of gdFiles) {
   const content = readFileSync(file, "utf8");
   assert(!content.includes("\r\n"), `${file} should use LF line endings`);
