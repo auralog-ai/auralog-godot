@@ -27,8 +27,8 @@ jobs:
       - run: godot --headless --path . --import --quit
 
       - name: Package addon
-        run: zip -r auralog-godot.zip addons/auralog
+        run: zip -r auralogs-godot.zip addons/auralogs
 
       - uses: softprops/action-gh-release@v2
         with:
-          files: auralog-godot.zip
+          files: auralogs-godot.zip
