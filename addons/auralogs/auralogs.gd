@@ -2,7 +2,7 @@ class_name AuralogsClient
 extends Node
 
 const SDK_NAME := "auralogs-godot"
-const SDK_VERSION := "0.1.0"
+const SDK_VERSION := "1.0.0"
 const CRASH_MARKER := "Program crashed with signal"
 
 var _config := AuralogsConfig.new()
